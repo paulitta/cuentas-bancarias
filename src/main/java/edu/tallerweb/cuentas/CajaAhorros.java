@@ -7,7 +7,7 @@ package edu.tallerweb.cuentas;
 public class CajaAhorros extends AbstractCuenta {
 
 	private Double saldo = 0.0;
-	int cantExtracciones = 0;
+	private int cantExtracciones = 0;
 
 	/**
 	 * No hay reglas adicionales para el depósito

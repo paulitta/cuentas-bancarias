@@ -29,7 +29,7 @@ public class CuentaTests {
 		cuenta.extraer(4000.0);
 	}
 
-	@Test
+/*	@Test
 	public void queCajaDeAhorrosHagaLaConsigna() {
 		CajaAhorros cuenta = new CajaAhorros();
 		cuenta.depositar(6000.0);
@@ -164,5 +164,5 @@ public class CuentaTests {
 
 		Assert.assertEquals("la cuenta tiene $ 15.0", 15.0, cuenta.getSaldo(),
 				0.0);
-	}
+	}*/
 }
