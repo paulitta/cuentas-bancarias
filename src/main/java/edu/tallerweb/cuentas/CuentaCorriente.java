@@ -4,22 +4,23 @@ package edu.tallerweb.cuentas;
  * La más compleja de las cuentas, Ésta permite establecer una cantidad de
  * dinero a girar en descubierto. Es por ello que cada vez que se desee extraer
  * dinero, no sólo se considera el que se posee, sino el límite adicional que el
- * banco estará brindando.
- * Por supuesto esto no es gratis, ya que el banco nos cobrará un 5% como
- * comisión sobre todo el monto en descubierto consumido en la operación.
- * Por ejemplo, si tuviéramos $ 100 en la cuenta, y quisiéramos retirar $ 200
- * (con un descubierto de $ 150), podremos hacerlo. Pasaremos a deberle al banco
- * $ 105 en total: los $ 100 que nos cubrió, más el 5% adicional sobre el
- * descubierto otorgado.
+ * banco estará brindando. Por supuesto esto no es gratis, ya que el banco nos
+ * cobrará un 5% como comisión sobre todo el monto en descubierto consumido en
+ * la operación. Por ejemplo, si tuviéramos $ 100 en la cuenta, y quisiéramos
+ * retirar $ 200 (con un descubierto de $ 150), podremos hacerlo. Pasaremos a
+ * deberle al banco $ 105 en total: los $ 100 que nos cubrió, más el 5%
+ * adicional sobre el descubierto otorgado.
  */
 public class CuentaCorriente extends AbstractCuenta {
 
 	private Double descubiertoTotal = 0.0;
 	private Double descubierto = 0.0;
 	private Double saldo = 0.0;
+	private final static int ADICIONAL = 5;
 
 	/**
 	 * Toda cuenta corriente se inicia con un límite total para el descubierto.
+	 * 
 	 * @param descubiertoTotal
 	 */
 	public CuentaCorriente(final Double descubiertoTotal) {
@@ -35,16 +36,21 @@ public class CuentaCorriente extends AbstractCuenta {
 	 */
 	public void depositar(final Double monto) {
 
-		if (this.descubierto == 0) {
-			this.saldo += monto;
-		} else {
-			if (monto >= this.descubierto) {
-				this.saldo += (monto - this.descubierto);
-				this.descubierto = 0.0;
+		if (monto > 0) {
+			if (this.descubierto == 0) {
+				this.saldo += monto;
 			} else {
+				if (monto >= this.descubierto) {
+					this.saldo += (monto - this.descubierto);
+					this.descubierto = 0.0;
+				} else {
 
-				this.descubierto -= monto;
+					this.descubierto -= monto;
+				}
 			}
+		} else {
+			throw new CuentaBancariaException(
+					"No puede depositar valores negativos");
 		}
 	}
 
@@ -58,34 +64,39 @@ public class CuentaCorriente extends AbstractCuenta {
 	 */
 	public void extraer(final Double monto) {
 
-		// limite 500
-		// saldo 100, desc 0, saco 50 => saldo 50, desc 0
-		// saldo 100, desc 0, saco 200 => saldo 0, desc 105
-		// saldo 0, desc 105, saco 200 =>
+		if (monto > 0) {
 
-		Double porcentajeDescubierto = 0.0;
+			Double porcentajeDescubierto = 0.0;
 
-		if (this.saldo < monto) { // Si el monto es superior al saldo ya calculo
-									// el porcentaje del descubierto
-			porcentajeDescubierto = (5 * (monto - this.saldo)) / 100;
-		}
-
-		if (monto <= this.saldo + this.descubiertoTotal
-				- (this.descubierto + porcentajeDescubierto)) {
-
-			if (monto <= this.saldo) { // Saldo es mayor a monto, extraigo de la cuenta
-				this.saldo -= monto;
-			} else {
-				this.descubierto += (monto - this.saldo)
-						+ porcentajeDescubierto; // Sigo acumulando descubierto
-													// utilizado
-				this.saldo = 0.0;
+			if (this.saldo < monto) { // Si el monto es superior al saldo ya
+										// calculo
+										// el porcentaje del descubierto
+				porcentajeDescubierto = (ADICIONAL * (monto - this.saldo)) / 100;
 			}
 
+			if (monto <= this.saldo + this.descubiertoTotal
+					- (this.descubierto + porcentajeDescubierto)) {
+
+				if (monto <= this.saldo) { // Saldo es mayor a monto, extraigo
+											// de la
+											// cuenta
+					this.saldo -= monto;
+				} else {
+					this.descubierto += (monto - this.saldo)
+							+ porcentajeDescubierto; // Sigo acumulando
+														// descubierto
+														// utilizado
+					this.saldo = 0.0;
+				}
+			} else {
+
+				throw new CuentaBancariaException(
+						"No puede extraer ese monto, supera el saldo y el descubierto");
+			}
 		} else {
 
 			throw new CuentaBancariaException(
-					"No puede extraer ese monto, supera el saldo y el descubierto");
+					"No puede extraer valores negativos");
 		}
 
 	}

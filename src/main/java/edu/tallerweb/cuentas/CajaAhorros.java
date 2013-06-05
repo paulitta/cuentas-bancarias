@@ -8,6 +8,8 @@ public class CajaAhorros extends AbstractCuenta {
 
 	private Double saldo = 0.0;
 	private int cantExtracciones = 0;
+	private final static int EXTRACCION_TOPE = 5;
+	private final static int ADICIONAL = 6;
 
 	/**
 	 * No hay reglas adicionales para el depósito
@@ -16,7 +18,13 @@ public class CajaAhorros extends AbstractCuenta {
 	 *            a depositar
 	 */
 	public void depositar(final Double monto) {
-		this.saldo += monto;
+
+		if (monto > 0) {
+			this.saldo += monto;
+		} else {
+			throw new CuentaBancariaException(
+					"No puede depositar valores negativos");
+		}
 	}
 
 	/**
@@ -29,26 +37,21 @@ public class CajaAhorros extends AbstractCuenta {
 
 		this.cantExtracciones++;
 
-		/*
-		 * if (monto <= this.saldo) { this.saldo -= monto;
-		 * 
-		 * if (this.cantExtracciones > 5) {
-		 * 
-		 * this.saldo -= 6; } } else {
-		 * 
-		 * throw new CuentaBancariaException(
-		 * "No tiene suficiente saldo para hacer la extracción"); }
-		 */
-
-		if (monto <= this.saldo && cantExtracciones <= 5) {
-			this.saldo -= monto;
-		} else {
-			if (monto + 6 <= this.saldo && cantExtracciones > 5) {
-				this.saldo -= monto + 6;
+		if (monto > 0) {
+			if (monto <= this.saldo && cantExtracciones <= EXTRACCION_TOPE) {
+				this.saldo -= monto;
 			} else {
-				throw new CuentaBancariaException(
-						"No tiene suficiente saldo para hacer la extracción");
+				if (monto + ADICIONAL <= this.saldo && cantExtracciones > EXTRACCION_TOPE) {
+					this.saldo -= monto + ADICIONAL;
+				} else {
+					throw new CuentaBancariaException(
+							"No tiene suficiente saldo para hacer la extracción");
+				}
 			}
+		} else {
+			throw new CuentaBancariaException(
+					"No puede extraer valores negativos");
+
 		}
 	}
 
