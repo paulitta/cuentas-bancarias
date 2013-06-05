@@ -14,9 +14,11 @@ package edu.tallerweb.cuentas;
 public class CuentaCorriente extends AbstractCuenta {
 
 	private Double descubiertoTotal = 0.0;
-	private Double descubierto = 0.0;
+	private Double descubiertoParcial = 0.0;
+	private Double descubiertoDisponible = 0.0;
 	private Double saldo = 0.0;
-	private final static int ADICIONAL = 5;
+	private final int ADICIONAL = 5;
+	private final int PARA_PORCENTAJE = 100;
 
 	/**
 	 * Toda cuenta corriente se inicia con un límite total para el descubierto.
@@ -25,6 +27,7 @@ public class CuentaCorriente extends AbstractCuenta {
 	 */
 	public CuentaCorriente(final Double descubiertoTotal) {
 		this.descubiertoTotal = descubiertoTotal;
+		this.descubiertoDisponible = descubiertoTotal;
 	}
 
 	/**
@@ -37,15 +40,15 @@ public class CuentaCorriente extends AbstractCuenta {
 	public void depositar(final Double monto) {
 
 		if (monto > 0) {
-			if (this.descubierto == 0) {
+			if (this.descubiertoDisponible == this.descubiertoTotal) {
 				this.saldo += monto;
 			} else {
-				if (monto >= this.descubierto) {
-					this.saldo += (monto - this.descubierto);
-					this.descubierto = 0.0;
+				if (monto >= (this.descubiertoTotal - this.descubiertoDisponible)) {
+					this.saldo += (monto - (this.descubiertoTotal - this.descubiertoDisponible));
+					this.descubiertoDisponible = this.descubiertoTotal;
 				} else {
 
-					this.descubierto -= monto;
+					this.descubiertoDisponible += monto;
 				}
 			}
 		} else {
@@ -71,21 +74,23 @@ public class CuentaCorriente extends AbstractCuenta {
 			if (this.saldo < monto) { // Si el monto es superior al saldo ya
 										// calculo
 										// el porcentaje del descubierto
-				porcentajeDescubierto = (ADICIONAL * (monto - this.saldo)) / 100;
+				this.descubiertoParcial = monto - this.saldo;
+				porcentajeDescubierto = (ADICIONAL * this.descubiertoParcial)
+						/ PARA_PORCENTAJE;
 			}
 
-			if (monto <= this.saldo + this.descubiertoTotal
-					- (this.descubierto + porcentajeDescubierto)) {
+			if (monto + porcentajeDescubierto <= this.saldo
+					+ this.descubiertoDisponible) {
 
 				if (monto <= this.saldo) { // Saldo es mayor a monto, extraigo
 											// de la
 											// cuenta
 					this.saldo -= monto;
 				} else {
-					this.descubierto += (monto - this.saldo)
-							+ porcentajeDescubierto; // Sigo acumulando
-														// descubierto
-														// utilizado
+					this.descubiertoDisponible -= this.descubiertoParcial
+							+ porcentajeDescubierto; // Resto al descubierto
+														// total ya que lo estoy
+														// utilizando
 					this.saldo = 0.0;
 				}
 			} else {
@@ -116,7 +121,7 @@ public class CuentaCorriente extends AbstractCuenta {
 	 * @return el descubierto de la cuenta
 	 */
 	public Double getDescubierto() {
-		return this.descubierto;
+		return this.descubiertoDisponible;
 	}
 
 }

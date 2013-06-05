@@ -120,8 +120,8 @@ public class CuentaTests {
 				"al extraer $ 750.0 de una cuenta con $ 2500.0 se obtienen $ 1750.0",
 				1750.0, cuenta.getSaldo(), 0.0);
 
-		Assert.assertEquals("al no utilizar descubierto debe estar en $0.0",
-				0.0, cuenta.getDescubierto(), 0.0);
+		Assert.assertEquals("al no utilizar descubierto debe estar en $500.0",
+				500.0, cuenta.getDescubierto(), 0.0);
 	}
 
 	@Test(expected = CuentaBancariaException.class)
@@ -137,7 +137,7 @@ public class CuentaTests {
 		CuentaCorriente cuenta = new CuentaCorriente(250.0);
 		cuenta.depositar(-750.0);
 	}
-	
+
 	@Test(expected = CuentaBancariaException.class)
 	public void queNoSePuedaExtraerValoresNegativosEnCuentaCorriente() {
 		CuentaCorriente cuenta = new CuentaCorriente(250.0);
@@ -145,65 +145,90 @@ public class CuentaTests {
 	}
 
 	@Test
-	public void queAlUsarDescubiertoMeCobrenComision() {
+	public void queSePuedeExtraerEnDescubiertoDeUnaCuentaCorrienteAlUsarDescubiertoMeCobrenComision() {
 		CuentaCorriente cuenta = new CuentaCorriente(500.0);
-		cuenta.depositar(2500.0);
+		cuenta.depositar(1000.0);
 
 		Assert.assertEquals(
-				"al depositar $ 2500.0 en una cuenta vacía, tiene $ 2500.0",
-				2500.0, cuenta.getSaldo(), 0.0);
+				"al depositar $ 1000.0 en una cuenta vacía, tiene $ 1000.0",
+				1000.0, cuenta.getSaldo(), 0.0);
 
-		cuenta.extraer(2700.0);
+		cuenta.extraer(1100.0);
 
 		Assert.assertEquals(
-				"al extraer $ 2700.0 de una cuenta con $ 2500.0 el saldo queda en $ 0.0",
+				"al extraer $ 1100.0 de una cuenta con $ 1000.0 el saldo queda en $ 0.0",
 				0.0, cuenta.getSaldo(), 0.0);
 
 		Assert.assertEquals(
-				"al extraer $ 2700.0 de una cuenta con $ 2500.0 el descubierto es de $ 200.0 mas comision $ 10",
-				210.0, cuenta.getDescubierto(), 0.0);
+				"al extraer $ 1100.0 de una cuenta con $ 1000.0, use $ 100.0 descubierto + 5% comision, me queda de descubierto $ 395.0",
+				395.0, cuenta.getDescubierto(), 0.0);
 
-		cuenta.extraer(150.0);
+		cuenta.extraer(375.0);
 
 		Assert.assertEquals(
-				"al extraer $ 150.0 de la cuenta que posee un descubierto parcial de $ 210.0 ahora pasa a deber $ 367.50 con la comisión incluída",
-				367.50, cuenta.getDescubierto(), 0.0);
+				"al extraer $ 375.0 de la cuenta $ 0.0 que posee un descubierto de $ 395.0 ahora tiene un descubierto de $ 1.25",
+				1.25, cuenta.getDescubierto(), 0.0);
 	}
 
 	/*
-	 * @Test public void queAlDepositarPrimeroCubraElDescubierto() {
-	 * CuentaCorriente cuenta = new CuentaCorriente(500.0);
+	 * @Test public void
+	 * queSePuedeExtraerEnDescubiertoDeUnaCuentaCorrienteHastaElDisponibleConImpuesto
+	 * () { CuentaCorriente cuenta = new CuentaCorriente(500.0);
 	 * cuenta.depositar(1000.0);
 	 * 
 	 * Assert.assertEquals(
 	 * "al depositar $ 1000.0 en una cuenta vacía, tiene $ 1000.0", 1000.0,
 	 * cuenta.getSaldo(), 0.0);
 	 * 
-	 * cuenta.extraer(1100.0);
+	 * cuenta.extraer(1476.0);
 	 * 
 	 * Assert.assertEquals(
 	 * "al extraer $ 1100.0 de una cuenta con $ 1000.0 el saldo queda en $ 0.0",
 	 * 0.0, cuenta.getSaldo(), 0.0);
 	 * 
 	 * Assert.assertEquals(
-	 * "al extraer $ 1100.0 de una cuenta con $ 1000.0 el descubierto es de $ 100.0 mas comision $ 5"
-	 * , 105.0, cuenta.getDescubierto(), 0.0);
+	 * "al extraer $ 1100.0 de una cuenta con $ 1000.0, use $ 100.0 descubierto + 5% comision, me queda de descubierto $ 395.0"
+	 * , 0.2, cuenta.getDescubierto(), 0.0);
 	 * 
-	 * cuenta.depositar(50.0);
-	 * 
-	 * Assert.assertEquals(
-	 * "al depositar $ 50.0 el descubierto queda en $ 55.0", 55.0,
-	 * cuenta.getDescubierto(), 0.0);
-	 * 
-	 * Assert.assertEquals("la cuenta sigue en $ 0.0", 0.0, cuenta.getSaldo(),
-	 * 0.0);
-	 * 
-	 * cuenta.depositar(70.0);
-	 * 
-	 * Assert.assertEquals( "al depositar $ 70.0 el descubierto queda en $ 0.0",
-	 * 0.0, cuenta.getDescubierto(), 0.0);
-	 * 
-	 * Assert.assertEquals("la cuenta tiene $ 15.0", 15.0, cuenta.getSaldo(),
-	 * 0.0); }
+	 * }
 	 */
+
+	@Test
+	public void queAlDepositarPrimeroCubraElDescubierto() {
+		CuentaCorriente cuenta = new CuentaCorriente(500.0);
+		cuenta.depositar(1000.0);
+
+		Assert.assertEquals(
+				"al depositar $ 1000.0 en una cuenta vacía, tiene $ 1000.0",
+				1000.0, cuenta.getSaldo(), 0.0);
+
+		cuenta.extraer(1100.0);
+
+		Assert.assertEquals(
+				"al extraer $ 1100.0 de una cuenta con $ 1000.0 el saldo queda en $ 0.0",
+				0.0, cuenta.getSaldo(), 0.0);
+
+		Assert.assertEquals(
+				"al extraer $ 1100.0 de una cuenta con $ 1000.0, use $ 100.0 descubierto + 5% comision, me queda de descubierto $ 395.0",
+				395.0, cuenta.getDescubierto(), 0.0);
+
+		cuenta.depositar(50.0);
+
+		Assert.assertEquals(
+				"al depositar $ 50.0 el descubierto queda en $ 445.0", 445.0,
+				cuenta.getDescubierto(), 0.0);
+
+		Assert.assertEquals("la cuenta sigue en $ 0.0", 0.0, cuenta.getSaldo(),
+				0.0);
+
+		cuenta.depositar(70.0);
+
+		Assert.assertEquals(
+				"al depositar $ 70.0 el descubierto queda en $ 500.0", 500.0,
+				cuenta.getDescubierto(), 0.0);
+
+		Assert.assertEquals("la cuenta tiene $ 15.0", 15.0, cuenta.getSaldo(),
+				0.0);
+	}
+
 }

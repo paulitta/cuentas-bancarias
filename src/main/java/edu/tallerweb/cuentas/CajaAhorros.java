@@ -13,7 +13,6 @@ public class CajaAhorros extends AbstractCuenta {
 
 	/**
 	 * No hay reglas adicionales para el depósito
-	 * 
 	 * @param monto
 	 *            a depositar
 	 */
@@ -29,7 +28,6 @@ public class CajaAhorros extends AbstractCuenta {
 
 	/**
 	 * Se cobran $6 adicionales por cada extracción luego de la quinta.
-	 * 
 	 * @param monto
 	 *            a extraer
 	 */
@@ -57,7 +55,6 @@ public class CajaAhorros extends AbstractCuenta {
 
 	/**
 	 * Permite saber el saldo de la cuenta
-	 * 
 	 * @return el saldo de la cuenta
 	 */
 	public Double getSaldo() {
