@@ -11,7 +11,6 @@ public class CuentaSueldo extends AbstractCuenta {
 
 	/**
 	 * No hay reglas adicionales para el depósito
-	 * 
 	 * @param monto
 	 *            a depositar
 	 */
@@ -28,7 +27,6 @@ public class CuentaSueldo extends AbstractCuenta {
 
 	/**
 	 * No hay reglas adicionales para la extracción
-	 * 
 	 * @param monto
 	 *            a extraer
 	 */
@@ -50,7 +48,6 @@ public class CuentaSueldo extends AbstractCuenta {
 
 	/**
 	 * Permite saber el saldo de la cuenta
-	 * 
 	 * @return el saldo de la cuenta
 	 */
 	public Double getSaldo() {

@@ -8,8 +8,8 @@ public class CajaAhorros extends AbstractCuenta {
 
 	private Double saldo = 0.0;
 	private int cantExtracciones = 0;
-	private final static int EXTRACCION_TOPE = 5;
-	private final static int ADICIONAL = 6;
+	private final int extraccionTope = 5;
+	private final int adicional = 6;
 
 	/**
 	 * No hay reglas adicionales para el depósito
@@ -36,11 +36,11 @@ public class CajaAhorros extends AbstractCuenta {
 		this.cantExtracciones++;
 
 		if (monto > 0) {
-			if (monto <= this.saldo && cantExtracciones <= EXTRACCION_TOPE) {
+			if (monto <= this.saldo && cantExtracciones <= extraccionTope) {
 				this.saldo -= monto;
 			} else {
-				if (monto + ADICIONAL <= this.saldo && cantExtracciones > EXTRACCION_TOPE) {
-					this.saldo -= monto + ADICIONAL;
+				if (monto + adicional <= this.saldo && cantExtracciones > extraccionTope) {
+					this.saldo -= monto + adicional;
 				} else {
 					throw new CuentaBancariaException(
 							"No tiene suficiente saldo para hacer la extracción");

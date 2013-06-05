@@ -17,12 +17,11 @@ public class CuentaCorriente extends AbstractCuenta {
 	private Double descubiertoParcial = 0.0;
 	private Double descubiertoDisponible = 0.0;
 	private Double saldo = 0.0;
-	private final int ADICIONAL = 5;
-	private final int PARA_PORCENTAJE = 100;
+	private final int adicional = 5;
+	private final int paraPorcentaje = 100;
 
 	/**
 	 * Toda cuenta corriente se inicia con un límite total para el descubierto.
-	 * 
 	 * @param descubiertoTotal
 	 */
 	public CuentaCorriente(final Double descubiertoTotal) {
@@ -33,7 +32,6 @@ public class CuentaCorriente extends AbstractCuenta {
 	/**
 	 * Todo depósito deberá cubrir primero el descubierto, si lo hubiera, y
 	 * luego contar para el saldo de la cuenta.
-	 * 
 	 * @param monto
 	 *            a depositar
 	 */
@@ -61,7 +59,6 @@ public class CuentaCorriente extends AbstractCuenta {
 	 * Se cobrará el 5% de comisión sobre el monto girado en descubierto. Por
 	 * supuesto, no puede extraerse más que el total de la cuenta, más el
 	 * descubierto (comisión incluída)
-	 * 
 	 * @param monto
 	 *            a extraer
 	 */
@@ -75,22 +72,18 @@ public class CuentaCorriente extends AbstractCuenta {
 										// calculo
 										// el porcentaje del descubierto
 				this.descubiertoParcial = monto - this.saldo;
-				porcentajeDescubierto = (ADICIONAL * this.descubiertoParcial)
-						/ PARA_PORCENTAJE;
+				porcentajeDescubierto = (adicional * this.descubiertoParcial)
+						/ paraPorcentaje;
 			}
 
 			if (monto + porcentajeDescubierto <= this.saldo
 					+ this.descubiertoDisponible) {
 
-				if (monto <= this.saldo) { // Saldo es mayor a monto, extraigo
-											// de la
-											// cuenta
+				if (monto <= this.saldo) {
 					this.saldo -= monto;
 				} else {
 					this.descubiertoDisponible -= this.descubiertoParcial
-							+ porcentajeDescubierto; // Resto al descubierto
-														// total ya que lo estoy
-														// utilizando
+							+ porcentajeDescubierto;
 					this.saldo = 0.0;
 				}
 			} else {
@@ -108,7 +101,6 @@ public class CuentaCorriente extends AbstractCuenta {
 
 	/**
 	 * Permite saber el saldo de la cuenta
-	 * 
 	 * @return el saldo de la cuenta
 	 */
 	public Double getSaldo() {
@@ -117,7 +109,6 @@ public class CuentaCorriente extends AbstractCuenta {
 
 	/**
 	 * Permite saber el saldo en descubierto
-	 * 
 	 * @return el descubierto de la cuenta
 	 */
 	public Double getDescubierto() {

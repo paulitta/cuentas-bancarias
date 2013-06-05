@@ -170,28 +170,25 @@ public class CuentaTests {
 				1.25, cuenta.getDescubierto(), 0.0);
 	}
 
-	/*
-	 * @Test public void
-	 * queSePuedeExtraerEnDescubiertoDeUnaCuentaCorrienteHastaElDisponibleConImpuesto
-	 * () { CuentaCorriente cuenta = new CuentaCorriente(500.0);
-	 * cuenta.depositar(1000.0);
-	 * 
-	 * Assert.assertEquals(
-	 * "al depositar $ 1000.0 en una cuenta vacía, tiene $ 1000.0", 1000.0,
-	 * cuenta.getSaldo(), 0.0);
-	 * 
-	 * cuenta.extraer(1476.0);
-	 * 
-	 * Assert.assertEquals(
-	 * "al extraer $ 1100.0 de una cuenta con $ 1000.0 el saldo queda en $ 0.0",
-	 * 0.0, cuenta.getSaldo(), 0.0);
-	 * 
-	 * Assert.assertEquals(
-	 * "al extraer $ 1100.0 de una cuenta con $ 1000.0, use $ 100.0 descubierto + 5% comision, me queda de descubierto $ 395.0"
-	 * , 0.2, cuenta.getDescubierto(), 0.0);
-	 * 
-	 * }
-	 */
+	@Test
+	public void queSePuedeExtraerEnDescubiertoDeUnaCuentaCorrienteHastaElDisponibleConImpuesto() {
+		CuentaCorriente cuenta = new CuentaCorriente(500.0);
+		cuenta.depositar(1000.0);
+
+		Assert.assertEquals(
+				"al depositar $ 1000.0 en una cuenta vacía, tiene $ 1000.0",
+				1000.0, cuenta.getSaldo(), 0.0);
+
+		cuenta.extraer(1476.0);
+
+		Assert.assertEquals(
+				"al extraer $ 1100.0 de una cuenta con $ 1000.0 el saldo queda en $ 0.0",
+				0.0, cuenta.getSaldo(), 0.0);
+
+		Assert.assertEquals(
+				"al extraer $ 1100.0 de una cuenta con $ 1000.0, use $ 100.0 descubierto + 5% comision, me queda de descubierto $ 395.0",
+				0.2, cuenta.getDescubierto(), 0.0);
+	}
 
 	@Test
 	public void queAlDepositarPrimeroCubraElDescubierto() {
