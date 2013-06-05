@@ -1,35 +1,64 @@
 package edu.tallerweb.cuentas;
 
 /**
- * Similar a la CuentaSueldo, pero se pide que luego de la
- * quinta extracci贸n de dinero se cobre un costo adicional
- * por extracci贸n de $ 6
+ * Similar a la CuentaSueldo, pero se pide que luego de la quinta extracci髇 de
+ * dinero se cobre un costo adicional por extracci髇 de $ 6
  */
-public class CajaAhorros {
+public class CajaAhorros extends AbstractCuenta {
+
+	private Double saldo = 0.0;
+	int cantExtracciones = 0;
 
 	/**
-	 * No hay reglas adicionales para el dep贸sito
-	 * @param monto a depositar
+	 * No hay reglas adicionales para el dep髎ito
+	 * 
+	 * @param monto
+	 *            a depositar
 	 */
 	public void depositar(final Double monto) {
-		throw new RuntimeException("No implementado a煤n");
+		this.saldo += monto;
 	}
 
 	/**
-	 * Se cobran $6 adicionales por cada extracci贸n luego de
-	 * la quinta.
-	 * @param monto a extraer
+	 * Se cobran $6 adicionales por cada extracci髇 luego de la quinta.
+	 * 
+	 * @param monto
+	 *            a extraer
 	 */
 	public void extraer(final Double monto) {
-		throw new RuntimeException("No implementado a煤n");
+
+		this.cantExtracciones++;
+
+		/*
+		 * if (monto <= this.saldo) { this.saldo -= monto;
+		 * 
+		 * if (this.cantExtracciones > 5) {
+		 * 
+		 * this.saldo -= 6; } } else {
+		 * 
+		 * throw new CuentaBancariaException(
+		 * "No tiene suficiente saldo para hacer la extracci髇"); }
+		 */
+
+		if (monto <= this.saldo && cantExtracciones <= 5) {
+			this.saldo -= monto;
+		} else {
+			if (monto + 6 <= this.saldo && cantExtracciones > 5) {
+				this.saldo -= monto + 6;
+			} else {
+				throw new CuentaBancariaException(
+						"No tiene suficiente saldo para hacer la extracci髇");
+			}
+		}
 	}
 
 	/**
 	 * Permite saber el saldo de la cuenta
+	 * 
 	 * @return el saldo de la cuenta
 	 */
 	public Double getSaldo() {
-		throw new RuntimeException("No implementado a煤n");
+		return this.saldo;
 	}
 
 }
